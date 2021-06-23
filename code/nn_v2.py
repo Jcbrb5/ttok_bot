@@ -7,7 +7,8 @@ import tensorflow as tf
 import json
 from tensorflow.keras import layers
 
-input_shape = (1942, 353, 1)
+# input_shape = (353, 1942, 1)
+input_shape = (1942, 1, 1)
 
 csv_data = pd.read_csv('../final_preprocessed_data.csv')
 csv_data = csv_data.drop(['diggCount', 'shareCount', 'playCount', 'commentCount'], axis=1)
@@ -40,12 +41,19 @@ x_train, x_test, y_train, y_test = train_test_split(data, engagement_data)
 x_train = np.expand_dims(x_train, -1)
 x_test = np.expand_dims(x_test, -1)
 
+print(x_train.shape)
+print(x_test.shape)
+
 y_train = keras.utils.to_categorical(y_train)
 y_test = keras.utils.to_categorical(y_test)
+
+print(y_train.shape)
+print(y_test.shape)
 
 model = keras.Sequential(
     [
     keras.Input(shape=input_shape),
+    layers.Dense(1, activation='linear'),
     # layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
     # layers.MaxPooling2D(pool_size=(2, 2)),
     # layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
@@ -61,7 +69,7 @@ model.summary()
 batch_size = 128
 epochs = 64
 
-model.compile(metrics=["accuracy"])
+model.compile(loss='mean_squared_error', metrics=["accuracy"])
 model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.1)
 score = model.evaluate(x_test, y_test, verbose=0)
 print("Test loss:", score[0])
