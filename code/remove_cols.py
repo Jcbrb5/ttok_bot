@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('../data_with_readable_timestamps.csv')
+df = pd.read_csv('../out.csv')
 df.drop(['id', 'secretID', 'authorMeta.id', 'authorMeta.secUid', 'authorMeta.name',
         'authorMeta.nickName', 'authorMeta.verified', 'authorMeta.signature',
         'authorMeta.avatar', 'authorMeta.following', 'authorMeta.fans',
