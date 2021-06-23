@@ -7,7 +7,7 @@ import tensorflow as tf
 import json
 from tensorflow.keras import layers
 
-input_shape = (1942, 353)
+input_shape = (1942, 353, 1)
 
 csv_data = pd.read_csv('../final_preprocessed_data.csv')
 csv_data = csv_data.drop(['diggCount', 'shareCount', 'playCount', 'commentCount'], axis=1)
@@ -37,8 +37,8 @@ engagement_data = csv_data['engagementMetric']
 
 x_train, x_test, y_train, y_test = train_test_split(data, engagement_data)
 
-# x_train = np.expand_dims(x_train, -1)
-# x_test = np.expand_dims(x_test, -1)
+x_train = np.expand_dims(x_train, -1)
+x_test = np.expand_dims(x_test, -1)
 
 y_train = keras.utils.to_categorical(y_train)
 y_test = keras.utils.to_categorical(y_test)
@@ -62,10 +62,7 @@ batch_size = 128
 epochs = 64
 
 model.compile(metrics=["accuracy"])
-print("over here")
 model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.1)
-print("here")
 score = model.evaluate(x_test, y_test, verbose=0)
 print("Test loss:", score[0])
 print("Test accuracy:", score[1])
-print("done")
