@@ -9,7 +9,7 @@ import vectorize_hashtags
 import clean_hashtags
 import remove_cols
 import nn_v2
-from Naked.toolshed.shell import execute_js
+from naked.toolshed.shell import execute_js
 
 if __name__ == '__main__':
     success = execute_js('./tiktok_scrape.js') # Run TikTok scraping script
