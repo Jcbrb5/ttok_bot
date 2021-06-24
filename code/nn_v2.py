@@ -45,7 +45,7 @@ def run_neural_net():
     y_test = keras.utils.to_categorical(y_test) # Make y_test a binary class matrix
 
     # Create a model with an input layer, a 1 dimensional convolution layer, a dropout layer,
-    # and a densly connected neural network layer.
+    # and a densely connected neural network layer.
     model = keras.Sequential(
         [
         keras.Input(shape=input_shape),

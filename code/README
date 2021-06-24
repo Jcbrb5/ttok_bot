@@ -10,7 +10,7 @@ of data for a machine learning model to train on, we wanted to focus on the spec
 but by modifying the tiktok_scrape.js script's API call and retaining (and utilizing) some of the data associated with the
 author of a video this project could be generalize to work for all Tik Tok videos.
 
-In order to run this project you will need to install the tiktok-scraper javascript library, as well as the naked, pandas, numpy,
+In order to run this project you will need to install the tiktok-scraper javascript library, as well as the Naked, pandas, numpy,
 scikit-learn, and tensorflow Python libraries.
 
 Use the following commands to install each of these libraries in their respective order:
