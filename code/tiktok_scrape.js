@@ -1,5 +1,3 @@
-// Use this script to scrape the data
-
 const TikTokScraper = require('tiktok-scraper');
 
 // User feed by username

@@ -8,64 +8,60 @@ import json
 from tensorflow.keras import layers
 from tensorflow.python.keras.layers.convolutional import Conv1D
 
-# input_shape = (353, 1942, 1)
-input_shape = (1942, 1, 1)
+def run_neural_net():
 
-csv_data = pd.read_csv('../final_preprocessed_data.csv')
-csv_data = csv_data.drop(['diggCount', 'shareCount', 'playCount', 'commentCount'], axis=1)
+    input_shape = (1942, 1, 1)
 
-data = []
-for i in range(len(csv_data)):
-    arr = []
-    for item in json.loads(csv_data['text'][i]):
-        arr.append(item)
-    for item in json.loads(csv_data['musicMeta.musicName'][i]):
-        arr.append(item)
-    for item in json.loads(csv_data['musicMeta.musicAuthor'][i]):
-        arr.append(item)
-    for item in json.loads(csv_data['musicMeta.musicAlbum'][i]):
-        arr.append(item)
-    for item in json.loads(csv_data['mentions'][i]):
-        arr.append(item)
-    for item in json.loads(csv_data['hashtags'][i]):
-        arr.append(item)
-    arr.append(csv_data['musicMeta.musicOriginal'][i])
-    arr.append(csv_data['musicMeta.duration'][i])
-    arr.append(csv_data['videoMeta.duration'][i])
-    arr.append(csv_data['createTime'][i])
-    data.append(arr)
+    csv_data = pd.read_csv('../final_preprocessed_data.csv')
+    csv_data = csv_data.drop(['diggCount', 'shareCount', 'playCount', 'commentCount'], axis=1)
 
-engagement_data = csv_data['engagementMetric']
+    data = []
+    for i in range(len(csv_data)):
+        arr = []
+        for item in json.loads(csv_data['text'][i]):
+            arr.append(item)
+        for item in json.loads(csv_data['musicMeta.musicName'][i]):
+            arr.append(item)
+        for item in json.loads(csv_data['musicMeta.musicAuthor'][i]):
+            arr.append(item)
+        for item in json.loads(csv_data['musicMeta.musicAlbum'][i]):
+            arr.append(item)
+        for item in json.loads(csv_data['mentions'][i]):
+            arr.append(item)
+        for item in json.loads(csv_data['hashtags'][i]):
+            arr.append(item)
+        arr.append(csv_data['musicMeta.musicOriginal'][i])
+        arr.append(csv_data['musicMeta.duration'][i])
+        arr.append(csv_data['videoMeta.duration'][i])
+        arr.append(csv_data['createTime'][i])
+        data.append(arr)
 
-x_train, x_test, y_train, y_test = train_test_split(data, engagement_data)
+    engagement_data = csv_data['engagementMetric']
 
-x_train = np.expand_dims(x_train, -1)
-x_test = np.expand_dims(x_test, -1)
+    x_train, x_test, y_train, y_test = train_test_split(data, engagement_data)
 
-y_train = keras.utils.to_categorical(y_train)
-y_test = keras.utils.to_categorical(y_test)
+    x_train = np.expand_dims(x_train, -1)
+    x_test = np.expand_dims(x_test, -1)
 
-model = keras.Sequential(
-    [
-    keras.Input(shape=input_shape),
-    layers.Conv1D(100, kernel_size=1, use_bias=True, activation="relu"),
-    layers.Dropout(0.5),
-    layers.Dense(1, activation='linear'),
-    # layers.Flatten(),
-    # layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
-    # layers.MaxPooling2D(pool_size=(2, 2)),
-    # layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
-    # layers.MaxPooling2D(pool_size=(2, 2)),
-    ]
-)
+    y_train = keras.utils.to_categorical(y_train)
+    y_test = keras.utils.to_categorical(y_test)
 
-model.summary()
+    model = keras.Sequential(
+        [
+        keras.Input(shape=input_shape),
+        layers.Conv1D(100, kernel_size=1, use_bias=True, activation="relu"),
+        layers.Dropout(0.5),
+        layers.Dense(1, activation='linear')
+        ]
+    )
 
-batch_size = 128
-epochs = 64
+    model.summary()
 
-model.compile(loss='mean_squared_logarithmic_error', metrics=["accuracy"])
-model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.1)
-score = model.evaluate(x_test, y_test, verbose=0)
-print("Test loss:", score[0])
-print("Test accuracy:", score[1])
+    batch_size = 128
+    epochs = 64
+
+    model.compile(loss='mean_squared_logarithmic_error', metrics=["accuracy"])
+    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.1)
+    score = model.evaluate(x_test, y_test, verbose=0)
+    print("Test loss:", score[0])
+    print("Test accuracy:", score[1])
